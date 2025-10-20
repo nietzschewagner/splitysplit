@@ -54,9 +54,10 @@ const getActiveEvent = (
   activeEventId: string | null,
 ): EventData | null => {
   if (events.length === 0) return null;
-  const found =
-    activeEventId && events.find((event) => event.id === activeEventId);
-  return found ?? events[0];
+  const found = activeEventId
+    ? events.find((event) => event.id === activeEventId) ?? null
+    : null;
+  return found ?? events[0] ?? null;
 };
 
 export const useSplitStore = create<State>((set, get) => ({
