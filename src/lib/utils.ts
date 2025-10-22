@@ -1,6 +1,4 @@
-const currencyIsoMap: Record<string, string> = {
-  NTD: "TWD",
-};
+import { currencyIsoMap } from "@/lib/currencies";
 
 export function formatCurrency(amount: number, currency: string): string {
   const iso = currencyIsoMap[currency] ?? currency;

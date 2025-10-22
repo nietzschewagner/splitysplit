@@ -1,5 +1,6 @@
 "use client";
 
+import { CURRENCY_OPTIONS } from "@/lib/currencies";
 import { useSplitStore } from "@/store/useSplitStore";
 
 export default function EventHeader() {
@@ -7,6 +8,10 @@ export default function EventHeader() {
   const setMeta = useSplitStore((state) => state.setMeta);
 
   if (!event) return null;
+
+  const hasCurrentCurrency = CURRENCY_OPTIONS.some(
+    (option) => option.code === event.currency,
+  );
 
   return (
     <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white via-slate-50 to-emerald-50 p-6 shadow-sm">
@@ -34,7 +39,7 @@ export default function EventHeader() {
           </div>
         </div>
 
-        <div className="w-full max-w-[200px]">
+        <div className="w-full max-w-[240px]">
           <label className="text-sm font-medium text-gray-600" htmlFor="event-currency">
             Currency
           </label>
@@ -44,10 +49,14 @@ export default function EventHeader() {
             value={event.currency}
             onChange={(e) => setMeta(event.title, e.target.value)}
           >
-            <option>NTD</option>
-            <option>USD</option>
-            <option>EUR</option>
-            <option>INR</option>
+            {!hasCurrentCurrency && (
+              <option value={event.currency}>{event.currency}</option>
+            )}
+            {CURRENCY_OPTIONS.map((option) => (
+              <option key={option.code} value={option.code}>
+                {option.label}
+              </option>
+            ))}
           </select>
         </div>
       </div>

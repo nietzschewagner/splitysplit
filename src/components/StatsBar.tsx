@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { CURRENCY_OPTIONS } from "@/lib/currencies";
 import { formatCurrency, formatRelativeTime } from "@/lib/utils";
 import { useSplitStore } from "@/store/useSplitStore";
 
@@ -41,6 +42,10 @@ export default function StatsBar() {
     return null;
   }
 
+  const currencyLabel =
+    CURRENCY_OPTIONS.find((option) => option.code === event.currency)?.label ??
+    event.currency;
+
   return (
     <section className="grid gap-3 rounded-2xl border border-gray-200 bg-white p-4 shadow-sm sm:grid-cols-2 md:grid-cols-4">
       <StatCard
@@ -68,7 +73,7 @@ export default function StatsBar() {
       />
       <StatCard
         label="Currency"
-        value={event.currency}
+        value={currencyLabel}
         hint="Change in event settings"
       />
     </section>

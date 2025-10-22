@@ -2,8 +2,9 @@
 
 import { FormEvent, useEffect, useState } from "react";
 import { useSplitStore } from "@/store/useSplitStore";
+import { CURRENCY_OPTIONS } from "@/lib/currencies";
 
-const SUPPORTED_CURRENCIES = ["USD", "NTD", "EUR", "GBP", "INR", "AUD"];
+const DEFAULT_CURRENCY = CURRENCY_OPTIONS[0]?.code ?? "USD";
 
 export default function EventManager() {
   const events = useSplitStore((state) => state.events);
@@ -14,12 +15,15 @@ export default function EventManager() {
   const activeEvent = useSplitStore((state) => state.event);
 
   const [title, setTitle] = useState("");
-  const [currency, setCurrency] = useState("USD");
+  const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
   const [confirmDelete, setConfirmDelete] = useState<string | null>(null);
 
   useEffect(() => {
     if (activeEvent && title.trim() === "") {
-      setCurrency(activeEvent.currency);
+      const matched = CURRENCY_OPTIONS.find(
+        (option) => option.code === activeEvent.currency,
+      );
+      setCurrency(matched?.code ?? DEFAULT_CURRENCY);
     }
   }, [activeEvent, title]);
 
@@ -54,11 +58,17 @@ export default function EventManager() {
           <select
             className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-slate-900 shadow-sm focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-200"
             value={currency}
-            onChange={(e) => setCurrency(e.target.value)}
+            onChange={(e) => {
+              const next = e.target.value;
+              const matched = CURRENCY_OPTIONS.find(
+                (option) => option.code === next,
+              );
+              setCurrency(matched?.code ?? DEFAULT_CURRENCY);
+            }}
           >
-            {SUPPORTED_CURRENCIES.map((value) => (
-              <option key={value} value={value}>
-                {value}
+            {CURRENCY_OPTIONS.map((option) => (
+              <option key={option.code} value={option.code}>
+                {option.label}
               </option>
             ))}
           </select>
